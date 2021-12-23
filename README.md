@@ -14,8 +14,8 @@ func TestATM_Withdraw(t *testing.T) {
 		When("the Cardholder requests $200")
 
 	funds := 100
-	request := 200
 	validCard := true
+	request := 200
 	wantDispensed := 0
 	wantFunds := 100
 
