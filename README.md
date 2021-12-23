@@ -7,8 +7,8 @@ scenario is an extremely simple BDD library (~100 lines of code) for Golang that
 ```go
 func TestATM_Withdraw(t *testing.T) {
 	t.Parallel()
-
-	// using scenario.Title is optional: you can start with s := scenario.Given("...")
+    
+	// using scenario.Title is optional: you can start with s := scenario.Given(...
 	s := scenario.Title("Account has insufficient funds").
 		Given("the account funds is $100").
 		And("the card is valid").
