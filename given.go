@@ -1,14 +1,14 @@
 package scenario
 
-type GivenFragment struct {
+type Given struct {
 	scenario *Scenario
 }
 
-func (g GivenFragment) And(description string) GivenFragment {
+func (g Given) And(description string) Given {
 	return g.scenario.Given(description)
 }
 
-func (g GivenFragment) When(description string) *Scenario {
+func (g Given) When(description string) *Scenario {
 	g.scenario.when = description
 	return g.scenario
 }

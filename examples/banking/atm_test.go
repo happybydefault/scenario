@@ -10,7 +10,7 @@ import (
 )
 
 func TestATM_Withdraw(t *testing.T) {
-	s := scenario.Title("Account has insufficient funds").
+	s := scenario.New("Account has insufficient funds").
 		Given("the account funds is $100").
 		And("the card is valid").
 		And("the ATM contains enough funds").

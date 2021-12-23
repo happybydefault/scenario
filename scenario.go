@@ -14,15 +14,9 @@ type Scenario struct {
 	thens  []*Then
 }
 
-// Title returns a pointer to a new BDD Scenario.
-func Title(title string) *Scenario {
+// New returns a pointer to a new BDD Scenario.
+func New(title string) *Scenario {
 	return &Scenario{title: title}
-}
-
-// Given returns a GivenFragment composed of a new Scenario.
-func Given(description string) GivenFragment {
-	s := &Scenario{}
-	return s.Given(description)
 }
 
 func (s *Scenario) Run(t *testing.T) bool {
@@ -62,9 +56,9 @@ func (s *Scenario) Then(description string, fn func(t *testing.T)) *Then {
 	return &then
 }
 
-func (s *Scenario) Given(description string) GivenFragment {
+func (s *Scenario) Given(description string) Given {
 	s.givens = append(s.givens, description)
-	return GivenFragment{scenario: s}
+	return Given{scenario: s}
 }
 
 // And is an alias for Then.

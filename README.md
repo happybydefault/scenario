@@ -6,16 +6,15 @@ scenario is an extremely simple BDD library (~100 LOC) for Golang that's 100% co
 
 ```go
 func TestATM_Withdraw(t *testing.T) {
-	// using scenario.Title is optional: you can start with s := scenario.Given(...
-	s := scenario.Title("Account has insufficient funds").
+	s := scenario.New("Account has insufficient funds").
 		Given("the account funds is $100").
 		And("the card is valid").
 		And("the ATM contains enough funds").
-		When("the Cardholder requests $200")
+		When("the Cardholder requests $20")
 
 	funds := 100
-	cardInvalid := false
 	request := 200
+	cardInvalid := false
 
 	account := banking.NewAccount(funds)
 
@@ -67,5 +66,5 @@ And the card should be returned
 --- PASS: TestATM_Withdraw (0.00s)
     --- PASS: TestATM_Withdraw/Account_has_insufficient_funds (0.00s)
 PASS
-ok      scenario/examples/banking       0.003s
+ok      scenario/examples/banking       0.002s
 ```
