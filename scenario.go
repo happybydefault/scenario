@@ -31,15 +31,17 @@ func (s *Scenario) Run(t *testing.T) bool {
 	fmt.Printf("%s\n\n", s)
 
 	ch := make(chan bool, len(s.thens))
-	go func() {
-		defer close(ch)
-		for _, then := range s.thens {
-			ch <- t.Run(then.description, func(t *testing.T) {
-				t.Helper()
-				then.fn(t)
-			})
-		}
-	}()
+	t.Run(s.title, func(t *testing.T) {
+		go func() {
+			defer close(ch)
+			for _, then := range s.thens {
+				ch <- t.Run(then.description, func(t *testing.T) {
+					t.Helper()
+					then.fn(t)
+				})
+			}
+		}()
+	})
 
 	success := true
 	for v := range ch {

@@ -60,13 +60,12 @@ Then the ATM should dispense $0
 And the account funds should be $100
 And the card should be returned
 
-=== RUN   TestATM_Withdraw/the_ATM_should_dispense_$0
-=== RUN   TestATM_Withdraw/the_account_funds_should_be_$100
-=== RUN   TestATM_Withdraw/the_card_should_be_returned
+=== RUN   TestATM_Withdraw/Account_has_insufficient_funds
+=== RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_ATM_should_dispense_$0
+=== RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_account_funds_should_be_$100
+=== RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_card_should_be_returned
 --- PASS: TestATM_Withdraw (0.00s)
-    --- PASS: TestATM_Withdraw/the_ATM_should_dispense_$0 (0.00s)
-    --- PASS: TestATM_Withdraw/the_account_funds_should_be_$100 (0.00s)
-    --- PASS: TestATM_Withdraw/the_card_should_be_returned (0.00s)
+    --- PASS: TestATM_Withdraw/Account_has_insufficient_funds (0.00s)
 PASS
 ok      scenario/examples/banking       0.003s
 ```
