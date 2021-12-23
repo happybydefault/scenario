@@ -14,12 +14,12 @@ func TestATM_Withdraw(t *testing.T) {
 		When("the Cardholder requests $200")
 
 	funds := 100
-	validCard := true
+	cardInvalid := false
 	request := 200
 
 	account := banking.NewAccount(funds)
 
-	card := banking.NewCard(account, validCard)
+	card := banking.NewCard(account, cardInvalid)
 	cardholder := banking.NewCardholder(card)
 
 	atm := banking.NewATM(request)
@@ -41,4 +41,32 @@ func TestATM_Withdraw(t *testing.T) {
 
 	s.Run(t)
 }
+```
+
+### Output
+
+```sh
+go test ./examples/banking -run "^TestATM_Withdraw$" -v
+```
+
+```
+=== RUN   TestATM_Withdraw
+Scenario: Account has insufficient funds
+Given the account funds is $100
+And the card is valid
+And the ATM contains enough funds
+When the Cardholder requests $20
+Then the ATM should dispense $0
+And the account funds should be $100
+And the card should be returned
+
+=== RUN   TestATM_Withdraw/the_ATM_should_dispense_$0
+=== RUN   TestATM_Withdraw/the_account_funds_should_be_$100
+=== RUN   TestATM_Withdraw/the_card_should_be_returned
+--- PASS: TestATM_Withdraw (0.00s)
+    --- PASS: TestATM_Withdraw/the_ATM_should_dispense_$0 (0.00s)
+    --- PASS: TestATM_Withdraw/the_account_funds_should_be_$100 (0.00s)
+    --- PASS: TestATM_Withdraw/the_card_should_be_returned (0.00s)
+PASS
+ok      scenario/examples/banking       0.003s
 ```
