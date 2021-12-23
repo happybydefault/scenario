@@ -1,10 +1,19 @@
 package scenario
 
 import (
+	"flag"
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/gookit/color"
 )
+
+var pretty bool
+
+func init() {
+	flag.BoolVar(&pretty, "scenario.pretty", false, "Enable pretty output.")
+}
 
 type Scenario struct {
 	t      *testing.T
@@ -22,7 +31,11 @@ func New(title string) *Scenario {
 func (s *Scenario) Run(t *testing.T) bool {
 	t.Helper()
 
-	fmt.Printf("%s\n\n", s)
+	str := s.String()
+	if pretty {
+		str = color.FgLightBlue.Sprint(s)
+	}
+	fmt.Printf("%s\n\n", str)
 
 	ch := make(chan bool, len(s.thens))
 	t.Run(s.title, func(t *testing.T) {
