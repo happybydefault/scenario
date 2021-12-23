@@ -45,7 +45,7 @@ func TestATM_Withdraw(t *testing.T) {
 ### Output
 
 ```sh
-go test ./examples/banking -run "^TestATM_Withdraw$" -v
+$ go test ./examples/banking -run "^TestATM_Withdraw$" -v
 ```
 
 ```
