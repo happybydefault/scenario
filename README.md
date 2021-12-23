@@ -16,8 +16,6 @@ func TestATM_Withdraw(t *testing.T) {
 	funds := 100
 	validCard := true
 	request := 200
-	wantDispensed := 0
-	wantFunds := 100
 
 	account := banking.NewAccount(funds)
 
@@ -30,11 +28,11 @@ func TestATM_Withdraw(t *testing.T) {
 
 	s.Then("the ATM should dispense $0", func(t *testing.T) {
 		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
-		assert.Equal(t, wantDispensed, dispensed)
+		assert.Equal(t, 0, dispensed)
 	})
 
 	s.And("the account funds should be $100", func(t *testing.T) {
-		assert.Equal(t, wantFunds, account.Funds())
+		assert.Equal(t, 100, account.Funds())
 	})
 
 	s.And("the card should be returned", func(t *testing.T) {
