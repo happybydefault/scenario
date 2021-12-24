@@ -19,13 +19,13 @@ func (w *prettifier) Write(p []byte) (n int, err error) {
 		trimmed := strings.TrimLeft(line, " ")
 		switch {
 		case strings.HasPrefix(line, "PASS"):
-			color.Greenln(line)
-		case strings.HasPrefix(line, "PASS"):
-			color.Redln(line)
+			color.Greenln(line + " ✓")
+		case strings.HasPrefix(line, "FAIL"):
+			color.Redln(line + " ✘")
 		case strings.HasPrefix(trimmed, "--- PASS: "):
-			color.Greenln(line)
+			color.Greenln(line + " ✓")
 		case strings.HasPrefix(trimmed, "--- FAIL: "):
-			color.Redln(line)
+			color.Redln(line + " ✘")
 		default:
 			fmt.Println(line)
 		}
