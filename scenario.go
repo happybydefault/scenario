@@ -37,26 +37,14 @@ func (s *Scenario) Run(t *testing.T) bool {
 	}
 	fmt.Printf("%s\n\n", str)
 
-	ch := make(chan bool, len(s.thens))
-	t.Run(s.title, func(t *testing.T) {
-		go func() {
-			defer close(ch)
-			for _, then := range s.thens {
-				ch <- t.Run(then.description, func(t *testing.T) {
-					t.Helper()
-					then.fn(t)
-				})
-			}
-		}()
-	})
-
-	success := true
-	for v := range ch {
-		if !v {
-			success = false
+	return t.Run(s.title, func(t *testing.T) {
+		for _, then := range s.thens {
+			t.Run(then.description, func(t *testing.T) {
+				t.Helper()
+				then.fn(t)
+			})
 		}
-	}
-	return success
+	})
 }
 
 func (s *Scenario) Then(description string, fn func(t *testing.T)) *Then {
