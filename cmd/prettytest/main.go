@@ -24,9 +24,13 @@ func (w *prettifier) Write(p []byte) (n int, err error) {
 			color.Redln(line)
 		case strings.HasPrefix(line, "FAIL"):
 			color.Redln(line + " ✘")
+		case strings.HasPrefix(line, "ok "):
+			color.Greenln(line + " ✓")
 		case strings.HasPrefix(trimmed, "--- PASS: "):
+			line = strings.Replace(line, "--- PASS: ", "", 1)
 			color.Greenln(line + " ✓")
 		case strings.HasPrefix(trimmed, "--- FAIL: "):
+			line = strings.Replace(line, "--- FAIL: ", "", 1)
 			color.Redln(line + " ✘")
 		default:
 			fmt.Println(line)
