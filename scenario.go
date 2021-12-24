@@ -38,6 +38,7 @@ func (s *Scenario) Run(t *testing.T) bool {
 	fmt.Printf("%s\n\n", str)
 
 	return t.Run(s.title, func(t *testing.T) {
+		t.Helper()
 		for _, then := range s.thens {
 			t.Run(then.description, func(t *testing.T) {
 				t.Helper()
