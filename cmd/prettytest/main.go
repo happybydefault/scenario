@@ -18,8 +18,10 @@ func (w *prettifier) Write(p []byte) (n int, err error) {
 	for _, line := range lines {
 		trimmed := strings.TrimLeft(line, " ")
 		switch {
-		case strings.HasPrefix(line, "PASS"):
-			color.Greenln(line + " ✓")
+		case line == "PASS":
+			color.Greenln(line)
+		case line == "FAIL":
+			color.Redln(line)
 		case strings.HasPrefix(line, "FAIL"):
 			color.Redln(line + " ✘")
 		case strings.HasPrefix(trimmed, "--- PASS: "):
