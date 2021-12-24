@@ -20,7 +20,7 @@ func main() {
 		if ok {
 			os.Exit(exitErr.ExitCode())
 		}
-		log.Println(err)
+		log.Printf("error while running command: %v", err)
 		os.Exit(1)
 	}
 }
