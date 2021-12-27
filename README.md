@@ -74,7 +74,7 @@ ok      scenario/examples/banking       0.002s
 
 #### With flag `-scenario.pretty`
 
-The scenario description is colored blue.
+The scenario description is colored light blue.
 
 ```sh
 go test ./examples/banking -run "^TestATM_Withdraw$" -v -scenario.pretty
