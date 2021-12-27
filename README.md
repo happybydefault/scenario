@@ -31,6 +31,7 @@ func TestATM_Withdraw(t *testing.T) {
 		assert.Equal(t, 0, dispensed)
 	})
 
+	// And is an alias for Then
 	s.And("the account funds should be $100", func(t *testing.T) {
 		assert.Equal(t, 100, account.Funds())
 	})
