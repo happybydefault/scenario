@@ -45,8 +45,10 @@ func TestATM_Withdraw(t *testing.T) {
 
 ### Output
 
+#### Normal
+
 ```sh
-go test ./examples/banking -run "^TestATM_Withdraw$" -v -scenario.pretty
+go test ./examples/banking -run "^TestATM_Withdraw$" -v
 ```
 
 ```
@@ -69,3 +71,13 @@ And the card should be returned
 PASS
 ok      scenario/examples/banking       0.002s
 ```
+
+#### With flag `-scenario.pretty`
+
+The scenario description is colored blue.
+
+```sh
+go test ./examples/banking -run "^TestATM_Withdraw$" -v -scenario.pretty
+```
+
+![Output with flag scenario dot pretty](assets/pretty.png "Output with flag -scenario.pretty")
