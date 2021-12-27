@@ -81,3 +81,14 @@ go test ./examples/banking -run "^TestATM_Withdraw$" -v -scenario.pretty
 ```
 
 ![Output with flag scenario dot pretty](assets/pretty.png "Output with flag -scenario.pretty")
+
+#### With flag `-scenario.pretty` and program `prettytest` (recommended way)
+
+The scenario description is colored light blue, and the whole output from `go test` is processed
+by [prettytest](htps://github.com/happybydefault/prettytest).
+
+```sh
+prettytest ./examples/banking -run "^TestATM_Withdraw$" -v -scenario.pretty
+```
+
+![Output with flag scenario dot pretty and program pretty test](assets/prettytest.png "Output with flag -scenario.pretty and program prettytest")
