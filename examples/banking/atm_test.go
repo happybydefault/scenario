@@ -3,8 +3,8 @@ package banking_test
 import (
 	"testing"
 
-	"scenario"
-	"scenario/examples/banking"
+	"github.com/happybydefault/scenario"
+	"github.com/happybydefault/scenario/examples/banking"
 
 	"github.com/stretchr/testify/assert"
 )
