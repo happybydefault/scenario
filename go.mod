@@ -1,4 +1,4 @@
-module scenario
+module github.com/happybydefault/scenario
 
 go 1.17
 
