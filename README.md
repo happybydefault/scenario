@@ -9,7 +9,7 @@ package.
 func TestATM_Withdraw(t *testing.T) {
 	s := scenario.New("Account has insufficient funds").
 		Given("the account funds is $100").
-		And("the card is valid").
+		And("the card is valid"). // And is an alias for Given
 		And("the ATM contains enough funds").
 		When("the Cardholder requests $20")
 
