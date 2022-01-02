@@ -46,16 +46,6 @@ func TestATM_Withdraw(t *testing.T) {
 }
 
 func TestATM_Withdraw_AccountHasInsufficientFunds(t *testing.T) {
-	// Scenario: Account has insufficient funds
-	// Given the account balance is $10
-	// And the card is valid
-	// And the machine contains enough funds
-	// When the Account Holder requests $20
-	// Then the ATM should not dispense any funds
-	// And the ATM should say there are insufficient funds
-	// And the account balance should be $10
-	// And the card should be returned
-
 	s := scenario.New("Account has insufficient funds").
 		Given("the account balance is $10").
 		And("the card is valid").
