@@ -81,13 +81,9 @@ func TestATM_Withdraw_AccountHasInsufficientFunds(t *testing.T) {
 }
 
 func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
-	// Scenario: Card has been disabled
-	// Given the card is disabled
-	// When the Account Holder requests $20
-	// Then the ATM should retain the card
-	// And the ATM should say the card has been retained
-
-	t.Parallel()
+	s := scenario.New("Card has been disabled").
+		Given("the card is disabled").
+		When("the Account Holder requests $20")
 
 	request := 20
 
@@ -99,9 +95,14 @@ func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
 	atm := banking.NewATM(request)
 
 	_, err := atm.Withdraw(cardholder, request)
-	assert.ErrorIs(t, err, banking.ErrCardRetained, "the ATM should say the card has been retained")
 
-	assert.Nil(t, cardholder.Card(), "the ATM should retain the card")
+	s.Then("the ATM should retain the card", func(t *testing.T) {
+		assert.Nil(t, cardholder.Card(), "the ATM should retain the card")
+	})
+
+	s.Then("And the ATM should say the card has been retained", func(t *testing.T) {
+		assert.ErrorIs(t, err, banking.ErrCardRetained, "the ATM should say the card has been retained")
+	})
 }
 
 func TestATM_Withdraw_ATMHasInsufficientFunds(t *testing.T) {
