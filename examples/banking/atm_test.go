@@ -1,6 +1,7 @@
 package banking_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/happybydefault/scenario"
@@ -110,65 +111,62 @@ func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
 }
 
 func TestATM_Withdraw_ATMHasInsufficientFunds(t *testing.T) {
-	// Scenario: ATM has insufficient funds
-	// Given the account balance is $100
-	// And the card is valid
-	// And the machine does not contain enough funds
-	// When the Account Holder requests $20
-	// Then the ATM should not dispense any funds
-	// And the ATM should say it has insufficient funds
-	// And the account balance should be $100
-	// And the card should be returned
-
-	t.Parallel()
-
-	type scenario struct {
-		funds         int
-		request       int
-		wantDispensed int
-		wantFunds     int
+	type testCase struct {
+		funds     int
+		request   int
+		wantFunds int
 	}
 
-	scenarios := []scenario{
+	testCases := []testCase{
 		{
-			funds:         100,
-			request:       20,
-			wantDispensed: 0,
-			wantFunds:     100,
+			funds:     100,
+			request:   20,
+			wantFunds: 100,
 		},
 		{
-			funds:         150,
-			request:       20,
-			wantDispensed: 0,
-			wantFunds:     150,
+			funds:     150,
+			request:   20,
+			wantFunds: 150,
 		},
 		{
-			funds:         200,
-			request:       30,
-			wantDispensed: 0,
-			wantFunds:     200,
+			funds:     200,
+			request:   30,
+			wantFunds: 200,
 		},
 	}
 
-	for _, s := range scenarios {
-		scenario := s
+	for _, tc := range testCases {
+		s := scenario.New("ATM has insufficient funds").
+			Given(fmt.Sprintf("the account balance is $%d", tc.funds)).
+			And("the card is valid").
+			And("the machine does not contain enough funds").
+			When(fmt.Sprintf("the Account Holder requests $%d", tc.request))
 
-		t.Run("", func(t *testing.T) {
-			t.Parallel()
-			account := banking.NewAccount(scenario.funds)
+		account := banking.NewAccount(tc.funds)
 
-			card := banking.NewCard(account, false)
-			cardholder := banking.NewCardholder(card)
+		card := banking.NewCard(account, false)
+		cardholder := banking.NewCardholder(card)
 
-			atm := banking.NewATM(scenario.request - 1)
+		atm := banking.NewATM(tc.request - 1)
 
-			dispensed, err := atm.Withdraw(cardholder, scenario.request)
-			assert.ErrorIs(t, err, banking.ErrATMInsufficientFunds, "should say ATM has insufficient funds")
-			assert.Equalf(t, scenario.wantDispensed, dispensed, "the ATM should dispense $%d", scenario.wantDispensed)
+		dispensed, err := atm.Withdraw(cardholder, tc.request)
 
-			assert.Equalf(t, scenario.wantFunds, account.Funds(), "the account funds should be $%d", scenario.wantFunds)
+		s.Then("the ATM should say it has insufficient funds", func(t *testing.T) {
+			assert.ErrorIs(t, err, banking.ErrATMInsufficientFunds)
+		})
 
+		s.And("the ATM should not dispense any funds", func(t *testing.T) {
+			assert.Equal(t, 0, dispensed)
+		})
+
+		s.And(fmt.Sprintf("the account balance should be $%d", tc.wantFunds), func(t *testing.T) {
+			assert.Equal(t, tc.wantFunds, account.Funds())
+		})
+
+		s.And("the card should be returned", func(t *testing.T) {
 			assert.NotNil(t, cardholder.Card(), "the card should be returned")
 		})
+
+		s.Run(t)
 	}
 }
