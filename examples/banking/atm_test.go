@@ -78,6 +78,8 @@ func TestATM_Withdraw_AccountHasInsufficientFunds(t *testing.T) {
 	s.And("the card should be returned", func(t *testing.T) {
 		assert.NotNil(t, cardholder.Card())
 	})
+
+	s.Run(t)
 }
 
 func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
@@ -103,6 +105,8 @@ func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
 	s.Then("And the ATM should say the card has been retained", func(t *testing.T) {
 		assert.ErrorIs(t, err, banking.ErrCardRetained, "the ATM should say the card has been retained")
 	})
+
+	s.Run(t)
 }
 
 func TestATM_Withdraw_ATMHasInsufficientFunds(t *testing.T) {
