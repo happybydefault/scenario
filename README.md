@@ -1,6 +1,6 @@
 # scenario
 
-`scenario` is an extremely simple BDD library (~100 LOC) for Golang that's 100% compatible with the standard `testing`
+scenario is an extremely simple BDD library (~100 LOC) for Golang that's 100% compatible with the standard testing
 package.
 
 ## How To Use
