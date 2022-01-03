@@ -62,7 +62,6 @@ When the Cardholder requests $20
 Then the ATM should dispense $0
 And the account funds should be $100
 And the card should be returned
-
 === RUN   TestATM_Withdraw/Account_has_insufficient_funds
 === RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_ATM_should_dispense_$0
 === RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_account_funds_should_be_$100
