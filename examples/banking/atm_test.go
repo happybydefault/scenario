@@ -100,11 +100,11 @@ func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
 	_, err := atm.Withdraw(cardholder, request)
 
 	s.Then("the ATM should retain the card", func(t *testing.T) {
-		assert.Nil(t, cardholder.Card(), "the ATM should retain the card")
+		assert.Nil(t, cardholder.Card())
 	})
 
-	s.Then("And the ATM should say the card has been retained", func(t *testing.T) {
-		assert.ErrorIs(t, err, banking.ErrCardRetained, "the ATM should say the card has been retained")
+	s.And("the ATM should say the card has been retained", func(t *testing.T) {
+		assert.ErrorIs(t, err, banking.ErrCardRetained)
 	})
 
 	s.Run(t)
