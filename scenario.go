@@ -33,14 +33,15 @@ func New(title string) *Scenario {
 func (s *Scenario) Run(t *testing.T) bool {
 	t.Helper()
 
-	str := s.String()
-	if pretty {
-		str = color.FgLightBlue.Sprint(s)
-	}
-	t.Log(str)
-
 	return t.Run(s.title, func(t *testing.T) {
 		t.Helper()
+
+		str := s.String()
+		if pretty {
+			str = color.FgLightBlue.Sprint(s)
+		}
+		t.Log(str)
+
 		for _, then := range s.thens {
 			t.Run(then.description, func(t *testing.T) {
 				t.Helper()
