@@ -87,7 +87,6 @@ go test ./examples/banking -run "TestATM_Withdraw_AccountHasInsufficientFunds" -
         --- PASS: TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_card_should_be_returned (0.00s)
 PASS
 ok  	github.com/happybydefault/scenario/examples/banking	(cached)
-
 ```
 
 #### With flag `-scenario.pretty`
