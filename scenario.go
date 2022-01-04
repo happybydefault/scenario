@@ -35,7 +35,7 @@ func (s *Scenario) Run(t *testing.T) bool {
 	if pretty {
 		str = color.FgLightBlue.Sprint(s)
 	}
-	fmt.Printf("%s\n", str)
+	t.Log(str)
 
 	return t.Run(s.title, func(t *testing.T) {
 		t.Helper()
