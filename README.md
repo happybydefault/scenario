@@ -6,15 +6,24 @@ package.
 ## How To Use
 
 ```go
+import (
+	"testing"
+
+	"github.com/happybydefault/scenario"
+	"github.com/happybydefault/scenario/examples/banking"
+
+	"github.com/stretchr/testify/assert"
+)
+
 func TestATM_Withdraw(t *testing.T) {
 	s := scenario.New("Account has insufficient funds").
-		Given("the account funds is $100").
+		Given("the account balance is $10").
 		And("the card is valid"). // And is an alias for Given
-		And("the ATM contains enough funds").
-		When("the Cardholder requests $20")
+		And("the machine contains enough funds").
+		When("the Account Holder requests $20")
 
-	funds := 100
-	request := 200
+	funds := 10
+	request := 20
 	cardInvalid := false
 
 	account := banking.NewAccount(funds)
@@ -26,14 +35,14 @@ func TestATM_Withdraw(t *testing.T) {
 
 	dispensed, err := atm.Withdraw(cardholder, request)
 
-	s.Then("the ATM should dispense $0", func(t *testing.T) {
+	s.Then("the ATM should not dispense any funds", func(t *testing.T) {
 		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
 		assert.Equal(t, 0, dispensed)
 	})
-
-	// And is an alias for Then
-	s.And("the account funds should be $100", func(t *testing.T) {
-		assert.Equal(t, 100, account.Funds())
+    
+    // And is an alias for Then
+	s.And("the ATM should say there are insufficient funds", func(t *testing.T) {
+		assert.Equal(t, 0, account.Funds())
 	})
 
 	s.And("the card should be returned", func(t *testing.T) {

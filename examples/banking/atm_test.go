@@ -11,14 +11,20 @@ import (
 )
 
 func TestATM_Withdraw(t *testing.T) {
-	s := scenario.New("Account has insufficient funds").
-		Given("the account funds is $100").
-		And("the card is valid").
-		And("the ATM contains enough funds").
-		When("the Cardholder requests $20")
+	testATMWithdrawAccountHasInsufficientFunds(t)
+	testATMWithdrawCardHasBeenDisabled(t)
+	testATMWithdrawATMHasInsufficientFunds(t)
+}
 
-	funds := 100
-	request := 200
+func testATMWithdrawAccountHasInsufficientFunds(t *testing.T) {
+	s := scenario.New("Account has insufficient funds").
+		Given("the account balance is $10").
+		And("the card is valid").
+		And("the machine contains enough funds").
+		When("the Account Holder requests $20")
+
+	funds := 10
+	request := 20
 	cardInvalid := false
 
 	account := banking.NewAccount(funds)
@@ -30,50 +36,16 @@ func TestATM_Withdraw(t *testing.T) {
 
 	dispensed, err := atm.Withdraw(cardholder, request)
 
-	s.Then("the ATM should dispense $0", func(t *testing.T) {
-		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
+	s.Then("the ATM should not dispense any money", func(t *testing.T) {
 		assert.Equal(t, 0, dispensed)
 	})
 
-	s.And("the account funds should be $100", func(t *testing.T) {
-		assert.Equal(t, 100, account.Funds())
-	})
-
-	s.And("the card should be returned", func(t *testing.T) {
-		assert.NotNil(t, cardholder.Card())
-	})
-
-	s.Run(t)
-}
-
-func TestATM_Withdraw_AccountHasInsufficientFunds(t *testing.T) {
-	s := scenario.New("Account has insufficient funds").
-		Given("the account balance is $10").
-		And("the card is valid").
-		And("the machine contains enough funds").
-		When("the Account Holder requests $20")
-
-	funds := 10
-	request := 20
-	wantDispensed := 0
-	wantFunds := 10
-
-	account := banking.NewAccount(funds)
-
-	card := banking.NewCard(account, false)
-	cardholder := banking.NewCardholder(card)
-
-	atm := banking.NewATM(request)
-
-	dispensed, err := atm.Withdraw(cardholder, request)
-
-	s.Then("the ATM should not dispense any funds", func(t *testing.T) {
-		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
-		assert.Equal(t, wantDispensed, dispensed)
-	})
-
 	s.And("the ATM should say there are insufficient funds", func(t *testing.T) {
-		assert.Equal(t, wantFunds, account.Funds())
+		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
+	})
+
+	s.And("the account balance should be the same as the beginning", func(t *testing.T) {
+		assert.Equal(t, funds, account.Funds())
 	})
 
 	s.And("the card should be returned", func(t *testing.T) {
@@ -83,16 +55,17 @@ func TestATM_Withdraw_AccountHasInsufficientFunds(t *testing.T) {
 	s.Run(t)
 }
 
-func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
+func testATMWithdrawCardHasBeenDisabled(t *testing.T) {
 	s := scenario.New("Card has been disabled").
 		Given("the card is disabled").
 		When("the Account Holder requests $20")
 
+	cardInvalid := true
 	request := 20
 
 	account := banking.NewAccount(request)
 
-	card := banking.NewCard(account, true)
+	card := banking.NewCard(account, cardInvalid)
 	cardholder := banking.NewCardholder(card)
 
 	atm := banking.NewATM(request)
@@ -110,7 +83,7 @@ func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
 	s.Run(t)
 }
 
-func TestATM_Withdraw_ATMHasInsufficientFunds(t *testing.T) {
+func testATMWithdrawATMHasInsufficientFunds(t *testing.T) {
 	type testCase struct {
 		funds     int
 		request   int
