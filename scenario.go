@@ -36,11 +36,11 @@ func (s *Scenario) Run(t *testing.T) bool {
 	return t.Run(s.title, func(t *testing.T) {
 		t.Helper()
 
-		str := s.String()
+		description := s.String()
 		if pretty {
-			str = color.FgLightBlue.Sprint(s)
+			description = color.FgLightBlue.Sprint(s)
 		}
-		t.Log(str)
+		t.Log(description)
 
 		for _, then := range s.thens {
 			t.Run(then.description, func(t *testing.T) {
