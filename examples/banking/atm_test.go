@@ -166,6 +166,8 @@ func TestATM_Withdraw_ATMHasInsufficientFunds_Parallel(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
+
 		s := scenario.New("ATM has insufficient funds").
 			Given(fmt.Sprintf("the account balance is $%d", tc.funds)).
 			And("the card is valid").
