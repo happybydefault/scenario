@@ -10,13 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestATM_Withdraw(t *testing.T) {
-	testATMWithdrawAccountHasInsufficientFunds(t)
-	testATMWithdrawCardHasBeenDisabled(t)
-	testATMWithdrawATMHasInsufficientFunds(t)
-}
-
-func testATMWithdrawAccountHasInsufficientFunds(t *testing.T) {
+func TestATM_Withdraw_AccountHasInsufficientFunds(t *testing.T) {
 	s := scenario.New("Account has insufficient funds").
 		Given("the account balance is $10").
 		And("the card is valid").
@@ -44,7 +38,7 @@ func testATMWithdrawAccountHasInsufficientFunds(t *testing.T) {
 		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
 	})
 
-	s.And("the account balance should be the same as the beginning", func(t *testing.T) {
+	s.And("the account balance should be the same as initially", func(t *testing.T) {
 		assert.Equal(t, funds, account.Funds())
 	})
 
@@ -55,7 +49,7 @@ func testATMWithdrawAccountHasInsufficientFunds(t *testing.T) {
 	s.Run(t)
 }
 
-func testATMWithdrawCardHasBeenDisabled(t *testing.T) {
+func TestATM_Withdraw_CardHasBeenDisabled(t *testing.T) {
 	s := scenario.New("Card has been disabled").
 		Given("the card is disabled").
 		When("the Account Holder requests $20")
@@ -83,7 +77,7 @@ func testATMWithdrawCardHasBeenDisabled(t *testing.T) {
 	s.Run(t)
 }
 
-func testATMWithdrawATMHasInsufficientFunds(t *testing.T) {
+func TestATM_Withdraw_ATMHasInsufficientFunds(t *testing.T) {
 	type testCase struct {
 		funds     int
 		request   int

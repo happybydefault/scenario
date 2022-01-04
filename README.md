@@ -15,10 +15,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestATM_Withdraw(t *testing.T) {
+func TestATM_Withdraw_AccountHasInsufficientFunds(t *testing.T) {
 	s := scenario.New("Account has insufficient funds").
 		Given("the account balance is $10").
-		And("the card is valid"). // And is an alias for Given
+		And("the card is valid").
 		And("the machine contains enough funds").
 		When("the Account Holder requests $20")
 
@@ -35,14 +35,16 @@ func TestATM_Withdraw(t *testing.T) {
 
 	dispensed, err := atm.Withdraw(cardholder, request)
 
-	s.Then("the ATM should not dispense any funds", func(t *testing.T) {
-		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
+	s.Then("the ATM should not dispense any money", func(t *testing.T) {
 		assert.Equal(t, 0, dispensed)
 	})
-    
-    // And is an alias for Then
+
 	s.And("the ATM should say there are insufficient funds", func(t *testing.T) {
-		assert.Equal(t, 0, account.Funds())
+		assert.ErrorIs(t, err, banking.ErrAccountInsufficientFunds)
+	})
+
+	s.And("the account balance should be the same as initially", func(t *testing.T) {
+		assert.Equal(t, funds, account.Funds())
 	})
 
 	s.And("the card should be returned", func(t *testing.T) {
@@ -58,27 +60,34 @@ func TestATM_Withdraw(t *testing.T) {
 #### Normal
 
 ```sh
-go test ./examples/banking -run "^TestATM_Withdraw$" -v
+go test ./examples/banking -run "TestATM_Withdraw_AccountHasInsufficientFunds" -v
 ```
 
 ```
-=== RUN   TestATM_Withdraw
-Scenario: Account has insufficient funds
-Given the account funds is $100
-And the card is valid
-And the ATM contains enough funds
-When the Cardholder requests $20
-Then the ATM should dispense $0
-And the account funds should be $100
-And the card should be returned
-=== RUN   TestATM_Withdraw/Account_has_insufficient_funds
-=== RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_ATM_should_dispense_$0
-=== RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_account_funds_should_be_$100
-=== RUN   TestATM_Withdraw/Account_has_insufficient_funds/the_card_should_be_returned
---- PASS: TestATM_Withdraw (0.00s)
-    --- PASS: TestATM_Withdraw/Account_has_insufficient_funds (0.00s)
+=== RUN   TestATM_Withdraw_AccountHasInsufficientFunds
+    atm_test.go:49: Scenario: Account has insufficient funds
+        Given the account balance is $10
+        And the card is valid
+        And the machine contains enough funds
+        When the Account Holder requests $20
+        Then the ATM should not dispense any money
+        And the ATM should say there are insufficient funds
+        And the account balance should be the same as initially
+        And the card should be returned
+=== RUN   TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds
+=== RUN   TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_ATM_should_not_dispense_any_money
+=== RUN   TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_ATM_should_say_there_are_insufficient_funds
+=== RUN   TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_account_balance_should_be_the_same_as_initially
+=== RUN   TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_card_should_be_returned
+--- PASS: TestATM_Withdraw_AccountHasInsufficientFunds (0.00s)
+    --- PASS: TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds (0.00s)
+        --- PASS: TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_ATM_should_not_dispense_any_money (0.00s)
+        --- PASS: TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_ATM_should_say_there_are_insufficient_funds (0.00s)
+        --- PASS: TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_account_balance_should_be_the_same_as_initially (0.00s)
+        --- PASS: TestATM_Withdraw_AccountHasInsufficientFunds/Account_has_insufficient_funds/the_card_should_be_returned (0.00s)
 PASS
-ok      scenario/examples/banking       0.002s
+ok  	github.com/happybydefault/scenario/examples/banking	(cached)
+
 ```
 
 #### With flag `-scenario.pretty`
@@ -86,7 +95,7 @@ ok      scenario/examples/banking       0.002s
 The scenario description is colored light blue.
 
 ```sh
-go test ./examples/banking -run "^TestATM_Withdraw$" -v -scenario.pretty
+go test ./examples/banking -run "TestATM_Withdraw_AccountHasInsufficientFunds" -v -scenario.pretty
 ```
 
 ![Output with flag scenario dot pretty](assets/pretty.png "Output with flag -scenario.pretty")
