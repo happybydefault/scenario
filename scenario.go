@@ -36,6 +36,10 @@ func (s *Scenario) Run(t *testing.T) bool {
 	return t.Run(s.title, func(t *testing.T) {
 		t.Helper()
 
+		if s.parallel {
+			t.Parallel()
+		}
+
 		description := s.String()
 		if pretty {
 			description = color.FgLightBlue.Sprint(s)
@@ -45,10 +49,6 @@ func (s *Scenario) Run(t *testing.T) bool {
 		for _, then := range s.thens {
 			t.Run(then.description, func(t *testing.T) {
 				t.Helper()
-
-				if s.parallel {
-					t.Parallel()
-				}
 
 				then.fn(t)
 			})
