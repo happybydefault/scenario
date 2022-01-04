@@ -16,7 +16,9 @@ func init() {
 }
 
 type Scenario struct {
-	t      *testing.T
+	t        *testing.T
+	parallel bool
+
 	title  string
 	givens []string
 	when   string
@@ -42,10 +44,20 @@ func (s *Scenario) Run(t *testing.T) bool {
 		for _, then := range s.thens {
 			t.Run(then.description, func(t *testing.T) {
 				t.Helper()
+
+				if s.parallel {
+					t.Parallel()
+				}
+
 				then.fn(t)
 			})
 		}
 	})
+}
+
+func (s *Scenario) Parallel() *Scenario {
+	s.parallel = true
+	return s
 }
 
 func (s *Scenario) Then(description string, fn func(t *testing.T)) *Then {

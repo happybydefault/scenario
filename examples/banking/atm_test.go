@@ -137,3 +137,66 @@ func TestATM_Withdraw_ATMHasInsufficientFunds(t *testing.T) {
 		s.Run(t)
 	}
 }
+
+func TestATM_Withdraw_ATMHasInsufficientFunds_Parallel(t *testing.T) {
+	t.Parallel() // optional, if we want to make this whole test to run in parallel too with other `Test...` functions
+
+	type testCase struct {
+		funds     int
+		request   int
+		wantFunds int
+	}
+
+	testCases := []testCase{
+		{
+			funds:     100,
+			request:   20,
+			wantFunds: 100,
+		},
+		{
+			funds:     150,
+			request:   20,
+			wantFunds: 150,
+		},
+		{
+			funds:     200,
+			request:   30,
+			wantFunds: 200,
+		},
+	}
+
+	for _, tc := range testCases {
+		s := scenario.New("ATM has insufficient funds").
+			Given(fmt.Sprintf("the account balance is $%d", tc.funds)).
+			And("the card is valid").
+			And("the machine does not contain enough funds").
+			When(fmt.Sprintf("the Account Holder requests $%d", tc.request))
+
+		account := banking.NewAccount(tc.funds)
+
+		card := banking.NewCard(account, false)
+		cardholder := banking.NewCardholder(card)
+
+		atm := banking.NewATM(tc.request - 1)
+
+		dispensed, err := atm.Withdraw(cardholder, tc.request)
+
+		s.Then("the ATM should say it has insufficient funds", func(t *testing.T) {
+			assert.ErrorIs(t, err, banking.ErrATMInsufficientFunds)
+		})
+
+		s.And("the ATM should not dispense any funds", func(t *testing.T) {
+			assert.Equal(t, 0, dispensed)
+		})
+
+		s.And(fmt.Sprintf("the account balance should be $%d", tc.wantFunds), func(t *testing.T) {
+			assert.Equal(t, tc.wantFunds, account.Funds())
+		})
+
+		s.And("the card should be returned", func(t *testing.T) {
+			assert.NotNil(t, cardholder.Card(), "the card should be returned")
+		})
+
+		s.Parallel().Run(t)
+	}
+}
