@@ -5,6 +5,10 @@ package.
 
 ## How To Use
 
+```sh
+go get github.com/happybydefault/scenario
+```
+
 ```go
 import (
 	"testing"
